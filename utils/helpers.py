@@ -45,6 +45,7 @@ def get_pyodide_editor_html(starter_code: str, problem_title: str = "Challenge")
     - CodeMirror editor (Python syntax highlighting, Dracula theme)
     - Pyodide runtime for in-browser Python execution
     - Run button, Clear button, output panel
+    - Deep Navy & Electric Blue developer styling
     """
     starter_code_json = json.dumps(starter_code)  # Properly escaped for JS embedding
 
@@ -59,47 +60,48 @@ def get_pyodide_editor_html(starter_code: str, problem_title: str = "Challenge")
   <style>
     * {{ margin:0; padding:0; box-sizing:border-box; }}
     body {{
-      background:#1e1e2e; color:#cdd6f4;
+      background:#172033; color:#F8FAFC;
       font-family:'Fira Code','Courier New',monospace;
       height:100vh; overflow:hidden;
       display:flex; flex-direction:column;
+      border:1px solid #26344D; border-radius:12px;
     }}
     .toolbar {{
-      background:#181825; padding:7px 14px;
+      background:#111827; padding:8px 16px;
       display:flex; justify-content:space-between; align-items:center;
-      border-bottom:1px solid #313244; flex-shrink:0;
-      min-height: 40px;
+      border-bottom:1px solid #26344D; flex-shrink:0;
+      min-height: 42px;
     }}
     .toolbar-left {{ display:flex; align-items:center; gap:10px; }}
     .lang-badge {{
-      background:#313244; color:#a6e3a1;
-      font-size:0.72rem; padding:3px 9px;
-      border-radius:4px; font-weight:700; letter-spacing:0.04em;
+      background:rgba(59,130,246,0.15); color:#60A5FA;
+      font-size:0.75rem; padding:3px 10px; border:1px solid rgba(59,130,246,0.3);
+      border-radius:6px; font-weight:700; letter-spacing:0.04em;
     }}
-    .editor-subtitle {{ color:#585b70; font-size:0.75rem; }}
-    #pyodide-status {{ font-size:0.75rem; color:#f9e2af; }}
+    .editor-subtitle {{ color:#94A3B8; font-size:0.75rem; }}
+    #pyodide-status {{ font-size:0.75rem; color:#F59E0B; font-weight:600; }}
     .btn {{
-      border:none; padding:5px 14px; border-radius:6px;
+      border:none; padding:6px 14px; border-radius:6px;
       cursor:pointer; font-weight:700; font-size:0.78rem;
       font-family:inherit; transition:all 0.2s;
     }}
-    .btn-run {{ background:#a6e3a1; color:#1e1e2e; }}
-    .btn-run:hover:not(:disabled) {{ background:#94e2d5; transform:scale(1.03); }}
-    .btn-clear {{ background:#313244; color:#cdd6f4; margin-right:6px; }}
-    .btn-clear:hover {{ background:#45475a; }}
-    .btn:disabled {{ background:#313244; color:#585b70; cursor:not-allowed; transform:none !important; }}
-    .editor-wrapper {{ flex:1; overflow:hidden; min-height:0; }}
-    .CodeMirror {{ height:100% !important; font-size:0.85rem; line-height:1.55; }}
+    .btn-run {{ background:#3B82F6; color:#FFFFFF; }}
+    .btn-run:hover:not(:disabled) {{ background:#2563EB; transform:scale(1.02); }}
+    .btn-clear {{ background:#1F293D; color:#CBD5E1; border:1px solid #26344D; margin-right:6px; }}
+    .btn-clear:hover {{ background:#26344D; }}
+    .btn:disabled {{ background:#1F293D; color:#64748B; cursor:not-allowed; transform:none !important; }}
+    .editor-wrapper {{ flex:1; overflow:hidden; min-height:0; background:#0B1020; }}
+    .CodeMirror {{ height:100% !important; font-size:0.85rem; line-height:1.55; background:#0B1020 !important; }}
     .output-panel {{
-      background:#11111b; border-top:1px solid #313244;
-      padding:9px 14px; max-height:135px; min-height:80px;
+      background:#0B1020; border-top:1px solid #26344D;
+      padding:10px 16px; max-height:135px; min-height:85px;
       overflow-y:auto; flex-shrink:0;
     }}
-    .out-header {{ color:#585b70; font-size:0.7rem; font-weight:700; letter-spacing:0.07em; margin-bottom:5px; text-transform:uppercase; }}
+    .out-header {{ color:#64748B; font-size:0.7rem; font-weight:700; letter-spacing:0.07em; margin-bottom:5px; text-transform:uppercase; }}
     #output {{ font-size:0.82rem; line-height:1.6; white-space:pre-wrap; word-break:break-word; }}
-    .out-normal {{ color:#cdd6f4; }}
-    .out-error {{ color:#f38ba8; }}
-    .out-info {{ color:#89b4fa; font-style:italic; }}
+    .out-normal {{ color:#F8FAFC; }}
+    .out-error {{ color:#EF4444; }}
+    .out-info {{ color:#94A3B8; font-style:italic; }}
   </style>
 </head>
 <body>
@@ -158,11 +160,11 @@ def get_pyodide_editor_html(starter_code: str, problem_title: str = "Challenge")
       try {{
         pyodide = await loadPyodide();
         document.getElementById('pyodide-status').textContent = '✅ Ready';
-        document.getElementById('pyodide-status').style.color = '#a6e3a1';
+        document.getElementById('pyodide-status').style.color = '#22C55E';
         document.getElementById('run-btn').disabled = false;
       }} catch (e) {{
         document.getElementById('pyodide-status').textContent = '❌ Failed – use Evaluate below';
-        document.getElementById('pyodide-status').style.color = '#f38ba8';
+        document.getElementById('pyodide-status').style.color = '#EF4444';
       }}
     }})();
 
@@ -181,24 +183,20 @@ def get_pyodide_editor_html(starter_code: str, problem_title: str = "Challenge")
 
       try {{
         await pyodide.runPythonAsync(code);
-        const out = lines.join('').trim();
-        outputDiv.innerHTML = out
-          ? '<span class="out-normal">' + out + '</span>'
-          : '<span class="out-info">(no output)</span>';
-      }} catch (e) {{
-        outputDiv.innerHTML = '<span class="out-error">' + esc(e.message) + '</span>';
+        outputDiv.innerHTML = lines.length ? lines.join('<br>') : '<span class="out-info">(Code executed with no output)</span>';
+      }} catch (err) {{
+        outputDiv.innerHTML = '<span class="out-error">' + esc(err.toString()) + '</span>';
+      }} finally {{
+        btn.disabled = false; btn.textContent = '▶ Run';
       }}
-      btn.disabled = false; btn.textContent = '▶ Run';
     }}
 
     function clearOutput() {{
-      document.getElementById('output').innerHTML = '<span class="out-info">Cleared.</span>';
+      document.getElementById('output').innerHTML = '<span class="out-info">Output cleared.</span>';
     }}
 
     function esc(s) {{
-      return String(s)
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }}
   </script>
 </body>

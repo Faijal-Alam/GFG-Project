@@ -1,6 +1,7 @@
 """
 app.py — SkillBridge: Employability Gap Analyzer & Custom Coding Assessment Engine
 Main Streamlit application. Entry point: `streamlit run app.py`
+Modern AI + Developer Tool Visual Design System (Deep Navy & Electric Blue)
 """
 
 import os
@@ -11,7 +12,7 @@ load_dotenv()
 
 # ── Page config MUST be the first Streamlit call ──────────────────────────────
 st.set_page_config(
-    page_title="SkillBridge | Employability Gap Analyzer",
+    page_title="SkillBridge | AI Employability Gap Analyzer",
     page_icon="🌉",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -25,94 +26,196 @@ from utils.helpers import load_sample_resume, load_sample_jd, get_pyodide_editor
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-#  CUSTOM CSS
+#  DESIGN SYSTEM & CUSTOM CSS (Deep Navy, Electric Blue, Violet AI)
 # ═══════════════════════════════════════════════════════════════════════════════
 _CSS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap');
 
-html, body, [class*="css"] { font-family: 'Inter', sans-serif !important; }
+html, body, [class*="css"] {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
 
-/* ── Hero Banner ── */
+/* ── App Background ── */
+.stApp {
+    background-color: #0B1020 !important;
+    color: #F8FAFC !important;
+}
+
+/* ── Hero Banner Header ── */
 .hero-banner {
-    background: linear-gradient(135deg, #0b2012 0%, #133320 45%, #0b1a26 100%);
-    border: 1px solid rgba(47,141,70,0.35);
-    border-radius: 18px;
-    padding: 30px 40px;
+    background: #172033;
+    border: 1px solid #26344D;
+    border-radius: 16px;
+    padding: 26px 36px;
     margin-bottom: 24px;
     position: relative;
-    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
-.hero-banner::after {
-    content: '';
-    position: absolute;
-    top: -60px; right: -40px;
-    width: 320px; height: 320px;
-    background: radial-gradient(circle, rgba(47,141,70,0.18) 0%, transparent 70%);
-    pointer-events: none;
+.hero-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.hero-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.hero-logo-icon {
+    font-size: 2rem;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    padding: 6px 12px;
+    border-radius: 12px;
 }
 .hero-title {
-    font-size: 2.5rem; font-weight: 800; margin: 0 0 4px 0;
-    background: linear-gradient(130deg, #2F8D46, #43B86C, #76D9A0);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0;
+    color: #F8FAFC;
+    letter-spacing: -0.02em;
 }
-.hero-sub { color: #8B949E; font-size: 0.98rem; margin: 0 0 16px 0; }
-.hero-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hero-title-blue {
+    color: #3B82F6;
+}
+.ai-badge {
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    color: #A78BFA;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.hero-sub {
+    color: #94A3B8;
+    font-size: 0.95rem;
+    margin: 4px 0 18px 0;
+}
+
+/* ── Workflow Progress Header ── */
+.hero-flow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
 .hf-step {
-    background: rgba(47,141,70,0.14); border: 1px solid rgba(47,141,70,0.32);
-    color: #43B86C; padding: 5px 13px; border-radius: 20px;
-    font-size: 0.78rem; font-weight: 600;
+    background: #1D293D;
+    border: 1px solid #26344D;
+    color: #94A3B8;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 .hf-step-active {
-    background: #2F8D46; color: #ffffff; border-color: #43B86C; font-weight: 700;
+    background: #3B82F6;
+    color: #FFFFFF;
+    border-color: #3B82F6;
+    font-weight: 700;
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35);
 }
-.hf-arrow { color: #2F8D46; font-size: 0.85rem; }
+.hf-step-done {
+    background: rgba(34, 197, 94, 0.12);
+    color: #22C55E;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    font-weight: 600;
+}
+.hf-arrow {
+    color: #64748B;
+    font-size: 0.85rem;
+}
 
 /* ── Section Headers ── */
 .sec-hdr {
-    display: flex; align-items: center; gap: 14px;
-    padding: 13px 20px;
-    background: linear-gradient(90deg, rgba(47,141,70,0.14) 0%, rgba(47,141,70,0.03) 100%);
-    border-left: 4px solid #2F8D46;
-    border-radius: 0 10px 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 18px;
+    background: #172033;
+    border: 1px solid #26344D;
+    border-left: 4px solid #3B82F6;
+    border-radius: 10px;
     margin: 20px 0 18px 0;
 }
 .sec-num {
-    background: #2F8D46; color: #fff;
-    width: 32px; height: 32px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.95rem; flex-shrink: 0;
+    background: #3B82F6;
+    color: #FFFFFF;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+    flex-shrink: 0;
 }
-.sec-title { font-size: 1.18rem; font-weight: 700; color: #E6EDF3; }
+.sec-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #F8FAFC;
+}
 
 /* ── Metric Cards ── */
 .metric-card {
-    border-radius: 14px; padding: 22px 18px; text-align: center;
-    border: 1px solid rgba(255,255,255,0.06);
+    background: #172033;
+    border: 1px solid #26344D;
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
 }
-.metric-num { font-size: 3.2rem; font-weight: 800; line-height: 1; }
-.metric-lbl { color: #8B949E; font-size: 0.82rem; margin-top: 5px; }
+.metric-num {
+    font-size: 2.8rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+.metric-lbl {
+    color: #94A3B8;
+    font-size: 0.82rem;
+    margin-top: 6px;
+    font-weight: 600;
+}
 
-/* ── Skill Tags ── */
-.tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0; }
+/* ── Semantic Skill Tags ── */
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
 .tag {
     display: inline-flex; align-items: center; gap: 4px;
     padding: 5px 12px; border-radius: 20px;
     font-size: 0.80rem; font-weight: 600;
 }
-.tag-match  { background:rgba(47,141,70,0.14);  color:#43B86C;  border:1px solid rgba(47,141,70,0.38); }
-.tag-miss   { background:rgba(229,57,53,0.12);   color:#EF5350;  border:1px solid rgba(229,57,53,0.35); }
-.tag-pri    { background:rgba(255,107,53,0.14);  color:#FF8C42;  border:1px solid rgba(255,107,53,0.38); }
-.tag-infer  { background:rgba(100,181,246,0.10); color:#64B5F6;  border:1px dashed rgba(100,181,246,0.35); }
+.tag-match  { background:rgba(34, 197, 94, 0.12);  color:#22C55E;  border:1px solid rgba(34, 197, 94, 0.35); }
+.tag-miss   { background:rgba(245, 158, 11, 0.12);  color:#F59E0B;  border:1px solid rgba(245, 158, 11, 0.35); }
+.tag-pri    { background:rgba(239, 68, 68, 0.12);   color:#EF4444;  border:1px solid rgba(239, 68, 68, 0.35); }
+.tag-infer  { background:rgba(59, 130, 246, 0.12);  color:#60A5FA;  border:1px dashed rgba(59, 130, 246, 0.35); }
 
-/* ── Info Cards ── */
+/* ── Cards & Containers ── */
 .card {
-    background: #161B22; border: 1px solid #21262D;
-    border-radius: 12px; padding: 18px; margin-bottom: 12px;
+    background: #172033;
+    border: 1px solid #26344D;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+}
+.card-elevated {
+    background: #1D293D;
+    border: 1px solid #26344D;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
 }
 .card-title {
-    font-size: 0.76rem; font-weight: 700;
+    font-size: 0.78rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.07em;
     margin-bottom: 10px;
 }
@@ -120,129 +223,165 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif !important; }
 /* ── Priority Gap Items ── */
 .gap-item {
     border-radius: 10px; padding: 11px 16px; margin-bottom: 8px;
-    border: 1px solid rgba(255,107,53,0.28);
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }
-.gap-skill { color: #FF8C42; font-weight: 700; font-size: 0.92rem; }
+.gap-skill { color: #EF4444; font-weight: 700; font-size: 0.92rem; }
 
-/* ── Recommendation Card ── */
+/* ── AI Recommendation Card (Violet) ── */
 .rec-card {
-    background: #0f1117; border: 1px solid #21262D;
+    background: rgba(139, 92, 246, 0.06);
+    border: 1px solid rgba(139, 92, 246, 0.28);
     border-radius: 10px; padding: 15px; margin-bottom: 9px;
 }
-.rec-skill { color: #FF8C42; font-weight: 700; font-size: 0.88rem; }
-.rec-body  { color: #8B949E; font-size: 0.83rem; margin-top: 6px; line-height: 1.65; }
+.rec-skill { color: #A78BFA; font-weight: 700; font-size: 0.88rem; }
+.rec-body  { color: #CBD5E1; font-size: 0.83rem; margin-top: 6px; line-height: 1.65; }
 
 /* ── Challenge Card ── */
 .ch-card {
-    background: linear-gradient(135deg, #0c1220, #111828);
-    border: 1px solid rgba(56,139,253,0.22);
+    background: #172033;
+    border: 1px solid #26344D;
     border-radius: 16px; padding: 24px; margin: 12px 0;
 }
-.ch-title { font-size: 1.45rem; font-weight: 700; color: #E6EDF3; margin-bottom: 10px; }
+.ch-title { font-size: 1.4rem; font-weight: 700; color: #F8FAFC; margin-bottom: 10px; }
 .diff-badge {
     display: inline-block; padding: 4px 14px; border-radius: 20px;
     font-size: 0.76rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
 }
-.diff-easy   { background:rgba(47,141,70,0.18); color:#43B86C; border:1px solid rgba(47,141,70,0.4); }
-.diff-medium { background:rgba(255,160,0,0.14); color:#FFB300; border:1px solid rgba(255,160,0,0.35); }
-.diff-hard   { background:rgba(229,57,53,0.14); color:#EF5350; border:1px solid rgba(229,57,53,0.35); }
+.diff-easy   { background:rgba(34, 197, 94, 0.15); color:#22C55E; border:1px solid rgba(34, 197, 94, 0.35); }
+.diff-medium { background:rgba(245, 158, 11, 0.15); color:#F59E0B; border:1px solid rgba(245, 158, 11, 0.35); }
+.diff-hard   { background:rgba(239, 68, 68, 0.15);  color:#EF4444; border:1px solid rgba(239, 68, 68, 0.35); }
 
-.prob-body { color: #C9D1D9; font-size: 0.93rem; line-height: 1.78; }
+.prob-body { color: #CBD5E1; font-size: 0.92rem; line-height: 1.75; }
 .code-block {
-    background: #0D1117; border: 1px solid #21262D; border-radius: 8px;
+    background: #0B1020; border: 1px solid #26344D; border-radius: 8px;
     padding: 13px 15px; font-family: 'Fira Code', monospace;
-    font-size: 0.83rem; color: #C9D1D9; white-space: pre-wrap;
+    font-size: 0.83rem; color: #F8FAFC; white-space: pre-wrap;
     overflow-x: auto; margin: 7px 0;
 }
 .sec-label {
-    font-size: 0.78rem; font-weight: 700; color: #8B949E;
+    font-size: 0.78rem; font-weight: 700; color: #94A3B8;
     text-transform: uppercase; letter-spacing: 0.06em; margin: 16px 0 6px 0;
 }
 
 /* ── Example Box ── */
 .ex-box {
-    background: #0D1117; border: 1px solid #21262D;
+    background: #0B1020; border: 1px solid #26344D;
     border-radius: 10px; padding: 14px; margin: 8px 0;
 }
-.ex-label { color: #484F58; font-size: 0.72rem; font-weight: 700; margin-bottom: 5px; }
+.ex-label { color: #64748B; font-size: 0.72rem; font-weight: 700; margin-bottom: 5px; }
 .ex-io { font-family:'Fira Code',monospace; font-size:0.81rem; white-space:pre; }
-.ex-in  { color: #A6E3A1; }
-.ex-out { color: #89B4FA; }
-.ex-exp { color: #6c7086; font-size: 0.78rem; margin-top: 8px; font-style: italic; }
+.ex-in  { color: #60A5FA; }
+.ex-out { color: #22C55E; }
+.ex-exp { color: #94A3B8; font-size: 0.78rem; margin-top: 8px; font-style: italic; }
 
-/* ── Test Result Items ── */
+/* ── Test Case Result Cards ── */
 .tr {
-    padding: 10px 15px; border-radius: 8px;
-    margin-bottom: 7px; border-left: 3px solid;
-    font-size: 0.86rem;
+    padding: 12px 16px; border-radius: 8px;
+    margin-bottom: 8px; border-left: 4px solid;
+    font-size: 0.86rem; background: #172033;
+    border-right: 1px solid #26344D;
+    border-top: 1px solid #26344D;
+    border-bottom: 1px solid #26344D;
 }
-.tr-pass  { background:rgba(47,141,70,0.10);  border-color:#2F8D46; }
-.tr-fail  { background:rgba(229,57,53,0.10);  border-color:#E53935; }
-.tr-error { background:rgba(255,107,53,0.10); border-color:#FF6B35; }
-.tr-tle   { background:rgba(255,193,7,0.09);  border-color:#FFC107; }
-.tr-detail { color: #6c7086; font-size: 0.8rem; margin-left: 8px; }
+.tr-pass  { border-left-color:#22C55E; }
+.tr-fail  { border-left-color:#EF4444; }
+.tr-error { border-left-color:#F59E0B; }
+.tr-tle   { border-left-color:#F59E0B; }
+.tr-detail { color: #94A3B8; font-size: 0.8rem; margin-left: 8px; }
 
-/* ── Score Bar ── */
-.sbar-bg { background:#21262D; border-radius:8px; height:12px; overflow:hidden; margin:10px 0; }
+/* ── Score Card & Gauge ── */
+.score-card {
+    background: #172033;
+    border: 1px solid #26344D;
+    border-radius: 16px; padding: 26px 20px; text-align: center;
+    height: 100%;
+}
+.sbar-bg { background:#0B1020; border-radius:8px; height:12px; overflow:hidden; margin:14px 0 6px 0; border: 1px solid #26344D; }
 .sbar-fg { height:100%; border-radius:8px; transition:width 0.6s ease; }
 
-/* ── Score Card ── */
-.score-card {
-    border-radius: 16px; padding: 28px 20px; text-align: center;
-    border: 1px solid; height: 100%;
-}
-
-/* ── Feedback Card ── */
+/* ── AI Feedback Card (Violet SaaS Accent) ── */
 .fb-card {
-    background: linear-gradient(135deg, #0c1421, #101829);
-    border: 1px solid rgba(56,139,253,0.24);
-    border-radius: 12px; padding: 20px;
+    background: linear-gradient(135deg, #13192B 0%, #1A1938 100%);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    border-radius: 14px; padding: 22px;
+    color: #F8FAFC; line-height: 1.7;
 }
 
-/* ── Info / Warning boxes ── */
+/* ── Info / Warning Boxes ── */
 .ibox {
-    background:rgba(56,139,253,0.08); border:1px solid rgba(56,139,253,0.22);
-    border-radius:10px; padding:13px 17px; margin:12px 0;
-    color:#89B4FA; font-size:0.88rem;
+    background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25);
+    border-radius: 10px; padding: 13px 17px; margin: 12px 0;
+    color: #60A5FA; font-size: 0.88rem;
 }
 .wbox {
-    background:rgba(255,193,7,0.08); border:1px solid rgba(255,193,7,0.25);
-    border-radius:10px; padding:13px 17px; margin:12px 0;
-    color:#FFB300; font-size:0.88rem;
+    background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 10px; padding: 13px 17px; margin: 12px 0;
+    color: #F59E0B; font-size: 0.88rem;
 }
 
 /* ── Next Steps Cards ── */
 .ns-card {
-    background:#161B22; border:1px solid #21262D;
+    background:#172033; border:1px solid #26344D;
     border-radius:12px; padding:20px; text-align:center;
     height: 130px; display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 6px;
 }
 .ns-icon { font-size:1.8rem; }
-.ns-title { color:#E6EDF3; font-weight:700; font-size:0.9rem; }
-.ns-sub   { color:#8B949E; font-size:0.78rem; }
+.ns-title { color:#F8FAFC; font-weight:700; font-size:0.9rem; }
+.ns-sub   { color:#94A3B8; font-size:0.78rem; }
 
 /* ── Divider ── */
-.div { border:none; border-top:1px solid #21262D; margin:28px 0; }
+.div { border:none; border-top:1px solid #26344D; margin:26px 0; }
 
-/* ── Streamlit overrides ── */
+/* ── Sidebar & Streamlit Overrides ── */
+[data-testid="stSidebar"] {
+    background-color: #111827 !important;
+    border-right: 1px solid #26344D !important;
+}
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
 .stDeployButton { display: none; }
+
 .stTextArea textarea {
-    font-family:'Fira Code',monospace !important; font-size:0.84rem !important;
-    background:#0D1117 !important; border:1px solid #30363D !important;
-    border-radius:8px !important; color:#C9D1D9 !important;
+    font-family: 'Fira Code', monospace !important; font-size: 0.84rem !important;
+    background: #0B1020 !important; border: 1px solid #26344D !important;
+    border-radius: 8px !important; color: #F8FAFC !important;
 }
-.stButton button {
+.stTextArea textarea:focus {
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 1px #3B82F6 !important;
+}
+
+/* Primary Button: Electric Blue */
+.stButton button[kind="primary"] {
+    background-color: #3B82F6 !important;
+    color: #FFFFFF !important;
+    border: none !important;
     border-radius: 8px !important;
     font-weight: 600 !important;
-    transition: transform 0.15s, box-shadow 0.15s !important;
+    transition: all 0.15s ease !important;
 }
 .stButton button[kind="primary"]:hover {
+    background-color: #2563EB !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 5px 15px rgba(47,141,70,0.35) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35) !important;
+}
+
+/* Secondary Button: Dark Slate */
+.stButton button[kind="secondary"] {
+    background-color: #172033 !important;
+    color: #CBD5E1 !important;
+    border: 1px solid #26344D !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.15s ease !important;
+}
+.stButton button[kind="secondary"]:hover {
+    background-color: #1D293D !important;
+    color: #F8FAFC !important;
+    border-color: #3B82F6 !important;
 }
 </style>
 """
@@ -335,14 +474,14 @@ def _sidebar() -> None:
     with st.sidebar:
         st.markdown(
             '<div style="text-align:center;padding:16px 0 14px;">'
-            '<div style="font-size:2.4rem;">🌉</div>'
-            '<div style="font-size:1.5rem;font-weight:800;color:#2F8D46;">SkillBridge</div>'
-            '<div style="font-size:0.75rem;color:#484F58;margin-top:3px;">Employability Gap Analyzer</div>'
+            '<div style="font-size:2.4rem;display:inline-block;background:rgba(59,130,246,0.15);padding:6px 14px;border-radius:12px;border:1px solid rgba(59,130,246,0.3);">🌉</div>'
+            '<div style="font-size:1.45rem;font-weight:800;color:#F8FAFC;margin-top:8px;">SkillBridge</div>'
+            '<div style="font-size:0.75rem;color:#94A3B8;margin-top:2px;">Employability Gap Engine</div>'
             '</div>',
             unsafe_allow_html=True,
         )
 
-        st.markdown("**Workflow Steps**")
+        st.markdown("<div style='color:#94A3B8;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;'>Workflow Steps</div>", unsafe_allow_html=True)
         steps = [
             (1, "Input Resume & JD", "📄"),
             (2, "Skill Gap Analysis", "🔍"),
@@ -365,7 +504,6 @@ def _sidebar() -> None:
             btn_type = "primary" if is_active else "secondary"
             if st.button(f"{btn_label} ({badge_text})", key=f"side_nav_{num}",
                          use_container_width=True, type=btn_type):
-                # Auto-initialize dependencies when switching steps directly
                 if num >= 2:
                     _ensure_data_and_analysis()
                 if num >= 3:
@@ -409,7 +547,7 @@ def _sidebar() -> None:
             st.caption("Using pre-built GFG challenges & heuristic analysis. Add `GEMINI_API_KEY` to `.env` for AI mode.")
 
         st.markdown(
-            '<div style="text-align:center;padding:16px 0 0;color:#3D444D;font-size:0.7rem;">'
+            '<div style="text-align:center;padding:16px 0 0;color:#64748B;font-size:0.7rem;">'
             'Built for GFG Hackathon<br>Python · Streamlit · Gemini AI · Pyodide'
             '</div>',
             unsafe_allow_html=True,
@@ -504,35 +642,35 @@ def _step2() -> None:
     priority = an.get("priority_gaps", []) or missing or ["REST APIs"]
 
     if mp >= 70:
-        sc, sbg = "#43B86C", "rgba(47,141,70,0.14)"
+        sc = "#22C55E"
     elif mp >= 40:
-        sc, sbg = "#FFB300", "rgba(255,160,0,0.10)"
+        sc = "#F59E0B"
     else:
-        sc, sbg = "#EF5350", "rgba(229,57,53,0.10)"
+        sc = "#EF4444"
 
     c1, c2, c3, c4 = st.columns(4)
     with c1:
         st.markdown(
-            f'<div class="metric-card" style="background:{sbg};border-color:{sc}33;">'
+            f'<div class="metric-card">'
             f'<div class="metric-num" style="color:{sc};">{mp}%</div>'
             f'<div class="metric-lbl">Match Score</div></div>',
             unsafe_allow_html=True)
     with c2:
         st.markdown(
-            '<div class="metric-card" style="background:rgba(47,141,70,0.08);border-color:rgba(47,141,70,0.2);">'
-            f'<div class="metric-num" style="color:#43B86C;">{len(matched)}</div>'
+            '<div class="metric-card">'
+            f'<div class="metric-num" style="color:#22C55E;">{len(matched)}</div>'
             '<div class="metric-lbl">Skills Matched</div></div>',
             unsafe_allow_html=True)
     with c3:
         st.markdown(
-            '<div class="metric-card" style="background:rgba(229,57,53,0.08);border-color:rgba(229,57,53,0.2);">'
-            f'<div class="metric-num" style="color:#EF5350;">{len(missing)}</div>'
+            '<div class="metric-card">'
+            f'<div class="metric-num" style="color:#F59E0B;">{len(missing)}</div>'
             '<div class="metric-lbl">Skills Missing</div></div>',
             unsafe_allow_html=True)
     with c4:
         st.markdown(
-            '<div class="metric-card" style="background:rgba(255,107,53,0.08);border-color:rgba(255,107,53,0.2);">'
-            f'<div class="metric-num" style="color:#FF8C42;">{len(priority)}</div>'
+            '<div class="metric-card">'
+            f'<div class="metric-num" style="color:#EF4444;">{len(priority)}</div>'
             '<div class="metric-lbl">Priority Gaps</div></div>',
             unsafe_allow_html=True)
 
@@ -545,8 +683,8 @@ def _step2() -> None:
         matched_tags = "".join(_tag(f"✓ {s}", "tag-match") for s in matched)
         st.markdown(
             '<div class="card">'
-            '<div class="card-title" style="color:#43B86C;">✅ Matched Skills</div>'
-            f'<div class="tags">{matched_tags or "<span style=\'color:#484F58\'>None found</span>"}</div>'
+            '<div class="card-title" style="color:#22C55E;">✅ Matched Skills</div>'
+            f'<div class="tags">{matched_tags or "<span style=\'color:#94A3B8\'>None found</span>"}</div>'
             '</div>',
             unsafe_allow_html=True)
 
@@ -556,8 +694,8 @@ def _step2() -> None:
         inferred_tags = "".join(_tag(s["skill"], "tag-infer") for s in rs if s.get("source") == "inferred")
         st.markdown(
             '<div class="card">'
-            '<div class="card-title" style="color:#89B4FA;">📄 Your Skills Profile</div>'
-            '<div style="font-size:0.75rem;color:#484F58;margin-bottom:8px;">🟢 Explicit &nbsp;·&nbsp; 🔵 Inferred from context</div>'
+            '<div class="card-title" style="color:#60A5FA;">📄 Your Skills Profile</div>'
+            '<div style="font-size:0.75rem;color:#94A3B8;margin-bottom:8px;">🟢 Explicit &nbsp;·&nbsp; 🔵 Inferred from context</div>'
             f'<div class="tags">{explicit_tags}{inferred_tags}</div>'
             '</div>',
             unsafe_allow_html=True)
@@ -571,8 +709,8 @@ def _step2() -> None:
             )
             st.markdown(
                 '<div class="card">'
-                '<div class="card-title" style="color:#EF5350;">❌ Missing Skills</div>'
-                '<div style="font-size:0.75rem;color:#484F58;margin-bottom:8px;">⚡ High priority &nbsp;·&nbsp; ✗ Required</div>'
+                '<div class="card-title" style="color:#F59E0B;">⚡ Skill Gaps &amp; Requirements</div>'
+                '<div style="font-size:0.75rem;color:#94A3B8;margin-bottom:8px;">🔴 Critical Gap &nbsp;·&nbsp; 🟡 Missing Skill</div>'
                 f'<div class="tags">{miss_tags}</div>'
                 '</div>',
                 unsafe_allow_html=True)
@@ -585,14 +723,14 @@ def _step2() -> None:
             )
             st.markdown(
                 '<div class="card">'
-                '<div class="card-title" style="color:#F38BA8;">💼 JD Requirements</div>'
+                '<div class="card-title" style="color:#A78BFA;">💼 JD Requirements</div>'
                 f'<div class="tags">{jd_tags}</div>'
                 '</div>',
                 unsafe_allow_html=True)
         else:
             st.success("🎉 Great news! You appear to have all the key required skills.")
 
-    # ── Priority Gaps & Recommendations ──
+    # ── Priority Gaps & AI Recommendations ──
     if priority:
         st.markdown('<hr class="div">', unsafe_allow_html=True)
         cp, cr2 = st.columns([1, 2], gap="large")
@@ -600,23 +738,21 @@ def _step2() -> None:
         with cp:
             st.markdown("#### 🎯 Priority Skill Gaps")
             rank_icons = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"]
-            alphas = [0.16, 0.13, 0.10, 0.08, 0.06]
             for i, gap in enumerate(priority[:5]):
                 icon = rank_icons[i] if i < len(rank_icons) else "📌"
-                alpha = alphas[i] if i < len(alphas) else 0.05
                 st.markdown(
-                    f'<div class="gap-item" style="background:rgba(255,107,53,{alpha});">'
+                    f'<div class="gap-item">'
                     f'<span class="gap-skill">{icon} {gap}</span>'
                     f'</div>',
                     unsafe_allow_html=True)
 
         with cr2:
             recs = an.get("recommendations", {})
-            st.markdown("#### 💡 How to Close These Gaps")
+            st.markdown("#### 🤖 AI Actionable Recommendations")
             for gap, rec in list(recs.items())[:4]:
                 st.markdown(
                     f'<div class="rec-card">'
-                    f'<div class="rec-skill">🎯 {gap}</div>'
+                    f'<div class="rec-skill">✨ {gap}</div>'
                     f'<div class="rec-body">{rec}</div>'
                     f'</div>',
                     unsafe_allow_html=True)
@@ -692,7 +828,7 @@ def _step3() -> None:
         f'<div class="ch-card">'
         f'<div class="ch-title">📝 {ch.get("title","Coding Challenge")}</div>'
         f'{_diff_badge(diff)}'
-        f'<span style="color:#484F58;font-size:0.8rem;margin-left:10px;">🎯 Target Skill: {skill}</span>'
+        f'<span style="color:#94A3B8;font-size:0.8rem;margin-left:10px;">🎯 Target Skill: {skill}</span>'
         f'</div>',
         unsafe_allow_html=True)
 
@@ -701,8 +837,8 @@ def _step3() -> None:
     with c_prob:
         st.markdown('<div class="sec-label">📋 Problem Statement</div>', unsafe_allow_html=True)
         st.markdown(
-            f'<div style="background:#161B22;border:1px solid #21262D;border-radius:10px;'
-            f'padding:18px;color:#C9D1D9;line-height:1.82;font-size:0.92rem;">'
+            f'<div style="background:#172033;border:1px solid #26344D;border-radius:10px;'
+            f'padding:18px;color:#F8FAFC;line-height:1.8;font-size:0.92rem;">'
             f'{ch.get("problem_statement","").replace(chr(10),"<br>")}'
             f'</div>',
             unsafe_allow_html=True)
@@ -785,12 +921,12 @@ def _step4() -> None:
         examples = ch.get("examples", [])
         for i, ex in enumerate(examples[:2], 1):
             st.markdown(
-                f'<div style="background:#0D1117;border:1px solid #21262D;border-radius:10px;padding:13px;margin-bottom:9px;">'
-                f'<div style="color:#89B4FA;font-size:0.74rem;font-weight:700;margin-bottom:6px;">EXAMPLE {i}</div>'
-                f'<div style="color:#484F58;font-size:0.68rem;font-weight:700;">INPUT:</div>'
-                f'<div style="font-family:Fira Code,monospace;color:#A6E3A1;font-size:0.8rem;white-space:pre;margin:3px 0 8px;">{ex.get("input","")}</div>'
-                f'<div style="color:#484F58;font-size:0.68rem;font-weight:700;">EXPECTED OUTPUT:</div>'
-                f'<div style="font-family:Fira Code,monospace;color:#89DCEB;font-size:0.8rem;white-space:pre;margin:3px 0;">{ex.get("output","")}</div>'
+                f'<div style="background:#172033;border:1px solid #26344D;border-radius:10px;padding:13px;margin-bottom:9px;">'
+                f'<div style="color:#60A5FA;font-size:0.74rem;font-weight:700;margin-bottom:6px;">EXAMPLE {i}</div>'
+                f'<div style="color:#94A3B8;font-size:0.68rem;font-weight:700;">INPUT:</div>'
+                f'<div style="font-family:Fira Code,monospace;color:#60A5FA;font-size:0.8rem;white-space:pre;margin:3px 0 8px;">{ex.get("input","")}</div>'
+                f'<div style="color:#94A3B8;font-size:0.68rem;font-weight:700;">EXPECTED OUTPUT:</div>'
+                f'<div style="font-family:Fira Code,monospace;color:#22C55E;font-size:0.8rem;white-space:pre;margin:3px 0;">{ex.get("output","")}</div>'
                 f'</div>',
                 unsafe_allow_html=True)
 
@@ -816,7 +952,6 @@ def _step4() -> None:
     if code_val != st.session_state.user_code:
         st.session_state.user_code = code_val
 
-    # Action Buttons: Run Test Code & Evaluate Solution
     ca, cb, cc = st.columns([1, 1, 1])
 
     test_cases = ch.get("test_cases", [])
@@ -850,7 +985,6 @@ def _step4() -> None:
             st.session_state.test_run_output = None
             st.rerun()
 
-    # Show Quick Run Output if available
     if st.session_state.test_run_output:
         st.markdown("##### 🖥️ Execution Output (Sample Input)")
         tro = st.session_state.test_run_output
@@ -903,31 +1037,26 @@ def _step5() -> None:
     results = ev["results"]
 
     if score == 100:
-        sc, se, sm = "#43B86C", "🏆", "Perfect Score!"
+        sc, se, sm = "#22C55E", "🏆", "Perfect Score!"
     elif score >= 70:
-        sc, se, sm = "#89B4FA", "👏", "Great Job!"
+        sc, se, sm = "#3B82F6", "👏", "Great Job!"
     elif score >= 40:
-        sc, se, sm = "#FFB300", "💪", "Keep Going!"
+        sc, se, sm = "#F59E0B", "💪", "Keep Going!"
     else:
-        sc, se, sm = "#EF5350", "📚", "Keep Practicing!"
+        sc, se, sm = "#EF4444", "📚", "Keep Practicing!"
 
     cs, cd = st.columns([1, 2], gap="large")
 
     with cs:
-        bar_bg = {
-            "#43B86C": "linear-gradient(90deg,#1a6632,#2F8D46)",
-            "#89B4FA": "linear-gradient(90deg,#2a4a9a,#4a7acf)",
-            "#FFB300": "linear-gradient(90deg,#a07000,#FFB300)",
-            "#EF5350": "linear-gradient(90deg,#8b1a1a,#EF5350)",
-        }.get(sc, "linear-gradient(90deg,#2F8D46,#43B86C)")
+        bar_bg = "#22C55E" if score == 100 else ("#3B82F6" if score >= 70 else ("#F59E0B" if score >= 40 else "#EF4444"))
 
         st.markdown(
-            f'<div class="score-card" style="background:rgba(0,0,0,0.25);border-color:{sc}40;">'
+            f'<div class="score-card">'
             f'<div style="font-size:2.4rem;">{se}</div>'
             f'<div style="font-size:3.6rem;font-weight:800;color:{sc};line-height:1.1;">{score}%</div>'
             f'<div style="color:{sc};font-weight:700;font-size:0.95rem;margin-top:4px;">{sm}</div>'
-            f'<div style="color:#484F58;font-size:0.82rem;margin-top:8px;">{passed} / {total} tests passed</div>'
-            f'<div class="sbar-bg" style="margin-top:16px;">'
+            f'<div style="color:#94A3B8;font-size:0.82rem;margin-top:8px;">{passed} / {total} tests passed</div>'
+            f'<div class="sbar-bg">'
             f'<div class="sbar-fg" style="width:{score}%;background:{bar_bg};"></div></div>'
             f'</div>',
             unsafe_allow_html=True)
@@ -938,29 +1067,29 @@ def _step5() -> None:
             status = r["status"]
             n = r["test_case"]
             if status == "PASS":
-                icon, cls = "✅", "tr-pass"
+                icon, cls, st_color = "✅", "tr-pass", "#22C55E"
                 detail = f'Output: <code>{r["actual"][:70].replace(chr(10),"↵")}</code>'
             elif status == "FAIL":
-                icon, cls = "❌", "tr-fail"
+                icon, cls, st_color = "❌", "tr-fail", "#EF4444"
                 exp = r["expected"][:55].replace(chr(10), "↵")
                 act = (r["actual"] or "(empty)")[:55].replace(chr(10), "↵")
                 detail = f'Expected: <code>{exp}</code> &nbsp;·&nbsp; Got: <code>{act}</code>'
             elif status == "ERROR":
-                icon, cls = "🔴", "tr-error"
+                icon, cls, st_color = "🔴", "tr-error", "#F59E0B"
                 err = ((r.get("error") or "Unknown error").split("\n")[-1])[:110]
                 detail = f'<code>{err}</code>'
             else:  # TLE
-                icon, cls = "⏱️", "tr-tle"
+                icon, cls, st_color = "⏱️", "tr-tle", "#F59E0B"
                 detail = "Time Limit Exceeded (10 s) — optimize your algorithm"
 
             st.markdown(
                 f'<div class="tr {cls}">'
-                f'<span style="font-weight:700;">{icon} Test {n}</span>'
+                f'<span style="font-weight:700;color:{st_color};">{icon} Test {n}</span>'
                 f'<span class="tr-detail">{detail}</span>'
                 f'</div>',
                 unsafe_allow_html=True)
 
-    # ── AI Feedback ──
+    # ── AI Feedback (Violet Accent) ──
     if ev.get("feedback"):
         st.markdown('<hr class="div">', unsafe_allow_html=True)
         st.markdown("#### 🤖 AI Feedback & Improvement Tips")
@@ -1009,23 +1138,40 @@ def main() -> None:
     _init_state()
     _sidebar()
 
-    # ── Hero Banner ──
+    # ── Redesigned SkillBridge Header ──
+    step_num = st.session_state.step
+
+    def _step_cls(n: int) -> str:
+        if n == step_num:
+            return "hf-step hf-step-active"
+        elif n < step_num or (n == 2 and st.session_state.skill_analysis) or (n == 3 and st.session_state.challenge):
+            return "hf-step hf-step-done"
+        else:
+            return "hf-step"
+
     st.markdown(
-        '<div class="hero-banner">'
-        '<div class="hero-title">🌉 SkillBridge</div>'
-        '<div class="hero-sub">AI-Powered Employability Gap Analyzer &amp; Custom Coding Assessment Engine</div>'
-        '<div class="hero-flow">'
-        f'<span class="hf-step {"hf-step-active" if st.session_state.step == 1 else ""}">📄 1. Input</span><span class="hf-arrow">→</span>'
-        f'<span class="hf-step {"hf-step-active" if st.session_state.step == 2 else ""}">🔍 2. Gap Analysis</span><span class="hf-arrow">→</span>'
-        f'<span class="hf-step {"hf-step-active" if st.session_state.step == 3 else ""}">🎯 3. Challenge</span><span class="hf-arrow">→</span>'
-        f'<span class="hf-step {"hf-step-active" if st.session_state.step == 4 else ""}">💻 4. Write &amp; Run</span><span class="hf-arrow">→</span>'
-        f'<span class="hf-step {"hf-step-active" if st.session_state.step == 5 else ""}">🏆 5. Evaluation</span>'
-        '</div>'
-        '</div>',
+        f'<div class="hero-banner">'
+        f'<div class="hero-header-row">'
+        f'<div class="hero-brand">'
+        f'<div class="hero-logo-icon">🌉</div>'
+        f'<div>'
+        f'<h1 class="hero-title">SkillBridge <span class="hero-title-blue">Engine</span></h1>'
+        f'<div class="hero-sub">Employability Gap Analyzer &amp; Custom Assessment Platform</div>'
+        f'</div>'
+        f'</div>'
+        f'<div class="ai-badge">🤖 AI-POWERED PLATFORM</div>'
+        f'</div>'
+        f'<div class="hero-flow">'
+        f'<span class="{_step_cls(1)}">📄 1. Input</span><span class="hf-arrow">→</span>'
+        f'<span class="{_step_cls(2)}">🔍 2. Gap Analysis</span><span class="hf-arrow">→</span>'
+        f'<span class="{_step_cls(3)}">🎯 3. Challenge</span><span class="hf-arrow">→</span>'
+        f'<span class="{_step_cls(4)}">💻 4. Write &amp; Run</span><span class="hf-arrow">→</span>'
+        f'<span class="{_step_cls(5)}">🏆 5. Evaluation</span>'
+        f'</div>'
+        f'</div>',
         unsafe_allow_html=True,
     )
 
-    # Render only the current active step view cleanly!
     current_step = st.session_state.step
     if current_step == 1:
         _step1()
