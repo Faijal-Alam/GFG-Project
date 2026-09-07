@@ -907,8 +907,8 @@ def _step4() -> None:
 
     _sec(4, "Write & Run Your Code")
 
-    starter = ch.get("starter_code", "# Write your Python solution here\n")
-    if not st.session_state.user_code:
+    starter = "# Write your Python solution here...\n\nimport sys\n\ndef solution():\n    # Read input from stdin\n    raw_input = sys.stdin.read()\n    # TODO: Implement your logic here\n    pass\n\nif __name__ == '__main__':\n    solution()\n"
+    if not st.session_state.user_code or st.session_state.user_code == ch.get("starter_code"):
         st.session_state.user_code = starter
 
     c_prob, c_ed = st.columns([1, 1], gap="large")
@@ -938,16 +938,17 @@ def _step4() -> None:
         )
         st.components.v1.html(editor_html, height=460, scrolling=False)
 
-    # ── Code Input & Execution ──
+    # ── Code Input & Submission Area ──
     st.markdown('<hr class="div">', unsafe_allow_html=True)
-    st.markdown("#### 📝 Code Submission & Testing")
+    st.markdown("#### ⌨️ Type Your Solution Code")
+    st.caption("Write or paste your Python solution in the code box below. Official test case evaluation will run on this code.")
 
     code_val = st.text_area(
-        "Python Code Solution:",
+        "Python Code Solution Input:",
         value=st.session_state.user_code or starter,
         height=260,
         key="sub_code_input",
-        placeholder="Paste or write your Python solution here…",
+        placeholder="Type or paste your Python solution here...",
     )
     if code_val != st.session_state.user_code:
         st.session_state.user_code = code_val
@@ -967,8 +968,10 @@ def _step4() -> None:
         if st.button("🚀 Evaluate Solution →", type="primary", use_container_width=True):
             if not test_cases:
                 st.error("No test cases available for evaluation.")
+            elif not st.session_state.user_code.strip():
+                st.warning("Please type your Python solution in the code box above before evaluating.")
             else:
-                with st.spinner("⚙️ Running official test cases…"):
+                with st.spinner("⚙️ Running official test cases on your code…"):
                     eval_res = evaluate_code(
                         st.session_state.user_code,
                         test_cases,
@@ -980,7 +983,7 @@ def _step4() -> None:
                 st.rerun()
 
     with cc:
-        if st.button("🔄 Reset Code to Starter", use_container_width=True):
+        if st.button("🔄 Reset to Template", use_container_width=True):
             st.session_state.user_code = starter
             st.session_state.test_run_output = None
             st.rerun()
@@ -1097,6 +1100,12 @@ def _step5() -> None:
         st.markdown(
             f'<div class="fb-card">{feedback_html}</div>',
             unsafe_allow_html=True)
+
+    # ── Your Submitted Solution Code ──
+    if st.session_state.user_code:
+        st.markdown('<hr class="div">', unsafe_allow_html=True)
+        st.markdown("#### 📄 Your Submitted Solution Code")
+        st.code(st.session_state.user_code, language="python")
 
     # ── What's Next ──
     st.markdown('<hr class="div">', unsafe_allow_html=True)
