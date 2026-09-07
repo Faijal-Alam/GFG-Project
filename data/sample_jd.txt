@@ -1,0 +1,75 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SOFTWARE ENGINEER – BACKEND (INTERNSHIP)
+TechCorp Solutions Pvt. Ltd. | Bangalore, India
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ABOUT THE COMPANY
+TechCorp Solutions is a fast-growing SaaS startup building enterprise workflow
+automation tools used by 500+ companies across India and Southeast Asia.
+Our backend team drives the core platform serving 2M+ daily API requests.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ROLE OVERVIEW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+We are looking for motivated software engineering interns to join our backend
+team for a 6-month internship (with PPO opportunity). You will design, build,
+and maintain REST APIs for our core product under mentorship from senior engineers.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REQUIRED SKILLS (MUST HAVE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Technical Skills:
+  - Python (intermediate to advanced) – 2+ years of experience
+  - SQL and relational database design (PostgreSQL or MySQL)
+  - REST API design and development – understanding of HTTP methods,
+    status codes, request/response lifecycle
+  - FastAPI framework (preferred) or Flask/Django
+  - Data Structures & Algorithms – must be comfortable with common
+    patterns (arrays, trees, graphs, DP)
+  - Problem Solving – ability to analyze and optimize algorithms
+  - Git and GitHub – branching, code review workflows
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GOOD TO HAVE (BONUS SKILLS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - Docker basics (containerizing Python services)
+  - Understanding of HTTP/HTTPS protocol internals
+  - Basic cloud concepts (AWS S3, EC2 or GCP equivalent)
+  - API authentication – JWT tokens, OAuth 2.0 flows
+  - Redis (for caching)
+  - Unit testing with pytest
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+JOB RESPONSIBILITIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - Design and develop REST API endpoints using FastAPI
+  - Write efficient and optimized SQL queries for data retrieval
+  - Collaborate with the frontend team on API contracts
+  - Participate in code reviews and follow engineering best practices
+  - Write unit tests (pytest) to ensure code reliability
+  - Containerize services using Docker for deployment
+  - Troubleshoot and debug production API issues
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUALIFICATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - Currently pursuing B.Tech/BE in CSE, IT, or related discipline
+  - Expected graduation: 2024 or 2025
+  - Strong problem-solving and analytical thinking skills
+  - Good communication skills (English)
+  - Ability to learn quickly in a fast-paced environment
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PERKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - Stipend: ₹25,000 – ₹35,000/month
+  - Pre-Placement Offer (PPO) based on performance
+  - Work from office (Bangalore) / Hybrid
+  - Mentorship from IIT/IIM alumni engineers
+  - Certificate of completion

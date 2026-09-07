@@ -1,0 +1,217 @@
+{
+  "REST APIs": {
+    "title": "HTTP Route Matcher",
+    "difficulty": "Medium",
+    "problem_statement": "You are building a lightweight API gateway for a microservices platform. Given a list of registered API routes and incoming HTTP requests, determine which route each request matches.\n\nA route can contain path parameters denoted by {param_name} (e.g., GET /users/{id}). A parameter segment matches any single path segment.\n\nA route matches a request when:\n1. The HTTP methods are identical (case-sensitive)\n2. The path has the same number of segments\n3. Each segment either matches exactly OR is a {param} placeholder\n\nRoutes are checked in registration order — return the first match found.",
+    "input_format": "Line 1: N (number of registered routes)\nNext N lines: routes in format 'METHOD /path'\nNext line: M (number of incoming requests)\nNext M lines: requests in format 'METHOD /path'",
+    "output_format": "For each request (one per line), print the matched route string exactly as registered, or '404 Not Found' if no route matches.",
+    "constraints": "1 \u2264 N, M \u2264 100\nHTTP Methods: GET, POST, PUT, DELETE, PATCH\nPath segments contain only alphanumeric characters and hyphens, or are {param} style\nNo trailing slashes",
+    "examples": [
+      {
+        "input": "3\nGET /users\nGET /users/{id}\nPOST /users\n2\nGET /users/42\nDELETE /users",
+        "output": "GET /users/{id}\n404 Not Found",
+        "explanation": "GET /users/42 matches GET /users/{id} because segment '42' matches the {id} parameter. DELETE /users has no matching route since only GET and POST are registered."
+      }
+    ],
+    "skill_tested": "REST API Design, URL Routing, String Parsing",
+    "starter_code": "import sys\n\ndef match_route(routes, method, path):\n    path_parts = path.split('/')\n    for route in routes:\n        r_method, r_path = route.split(' ', 1)\n        # Check HTTP method\n        if r_method != method:\n            continue\n        r_parts = r_path.split('/')\n        # Check segment count\n        if len(r_parts) != len(path_parts):\n            continue\n        # Check each segment\n        matched = True\n        for rp, pp in zip(r_parts, path_parts):\n            # TODO: A segment matches if it's a {param} placeholder OR exact string match\n            # Hint: check if rp starts with '{' and ends with '}'\n            if rp.startswith('{') and rp.endswith('}'):\n                continue  # parameter matches anything\n            if rp != pp:\n                matched = False\n                break\n        if matched:\n            return route\n    return '404 Not Found'\n\ndata = sys.stdin.read().strip().split('\\n')\nidx = 0\nn = int(data[idx]); idx += 1\nroutes = []\nfor _ in range(n):\n    routes.append(data[idx]); idx += 1\nm = int(data[idx]); idx += 1\nfor _ in range(m):\n    req = data[idx]; idx += 1\n    method, path = req.split(' ', 1)\n    print(match_route(routes, method, path))\n",
+    "test_cases": [
+      {
+        "input": "3\nGET /users\nGET /users/{id}\nPOST /users\n2\nGET /users/42\nDELETE /users",
+        "expected_output": "GET /users/{id}\n404 Not Found"
+      },
+      {
+        "input": "2\nGET /products/{id}/reviews\nPOST /products\n1\nGET /products/123/reviews",
+        "expected_output": "GET /products/{id}/reviews"
+      },
+      {
+        "input": "1\nGET /health\n2\nGET /health\nPOST /health",
+        "expected_output": "GET /health\n404 Not Found"
+      },
+      {
+        "input": "4\nGET /api/v1/users\nGET /api/v1/users/{id}\nPUT /api/v1/users/{id}\nDELETE /api/v1/users/{id}\n3\nGET /api/v1/users\nPUT /api/v1/users/5\nGET /api/v1/orders",
+        "expected_output": "GET /api/v1/users\nPUT /api/v1/users/{id}\n404 Not Found"
+      }
+    ]
+  },
+
+  "FastAPI": {
+    "title": "API Rate Limiter",
+    "difficulty": "Medium",
+    "problem_statement": "You are building an API rate limiter for a FastAPI application. Using a sliding window algorithm, determine for each incoming request whether it should be ALLOWED or RATE_LIMITED.\n\nThe rate limit is: maximum LIMIT requests per 60-second sliding window, per user.\n\nA sliding window works as follows: for each incoming request at timestamp T, count how many previous requests from the same user occurred within the window [T-59, T]. If this count is less than LIMIT, allow the request; otherwise, reject it.\n\nRequests are given in chronological order (sorted by timestamp).",
+    "input_format": "Line 1: LIMIT (max requests allowed per 60-second window per user)\nLine 2: N (total number of requests)\nNext N lines: 'timestamp user_id' (timestamp in integer seconds, user_id is a single word)",
+    "output_format": "N lines, each either 'ALLOWED' or 'RATE_LIMITED' corresponding to each request.",
+    "constraints": "1 \u2264 LIMIT \u2264 1000\n1 \u2264 N \u2264 10000\n0 \u2264 timestamp \u2264 10^9\ntimestamps are sorted in non-decreasing order\nuser_id contains only lowercase letters and digits",
+    "examples": [
+      {
+        "input": "3\n5\n0 user1\n10 user1\n20 user1\n30 user1\n180 user1",
+        "output": "ALLOWED\nALLOWED\nALLOWED\nRATE_LIMITED\n ALLOWED",
+        "explanation": "With limit=3: requests at t=0,10,20 fill the window. At t=30, window has 3 prior requests in [30-59, 30]=[0,10,20,30 range] already at limit → RATE_LIMITED. At t=180, old requests have expired → ALLOWED."
+      }
+    ],
+    "skill_tested": "API Rate Limiting, Sliding Window Algorithm, Data Structures",
+    "starter_code": "import sys\nfrom collections import defaultdict\n\ndef process_request(user_windows, user_id, timestamp, rate_limit):\n    \"\"\"\n    Determine if request should be ALLOWED or RATE_LIMITED.\n    user_windows: dict mapping user_id -> list of allowed request timestamps\n    \"\"\"\n    # Step 1: Remove timestamps outside the 60-second window\n    # Keep only timestamps t where: timestamp - t < 60\n    user_windows[user_id] = [\n        t for t in user_windows[user_id]\n        if timestamp - t < 60\n    ]\n    \n    # Step 2: Check if under the rate limit\n    if len(user_windows[user_id]) < rate_limit:\n        # TODO: Record this request and return True (ALLOWED)\n        user_windows[user_id].append(timestamp)\n        return True\n    else:\n        # TODO: Return False (RATE_LIMITED)\n        return False\n\ndata = sys.stdin.read().strip().split('\\n')\nrate_limit = int(data[0])\nn = int(data[1])\nuser_windows = defaultdict(list)\n\nfor i in range(2, 2 + n):\n    parts = data[i].split()\n    timestamp = int(parts[0])\n    user_id = parts[1]\n    if process_request(user_windows, user_id, timestamp, rate_limit):\n        print('ALLOWED')\n    else:\n        print('RATE_LIMITED')\n",
+    "test_cases": [
+      {
+        "input": "3\n3\n0 user1\n10 user1\n20 user1",
+        "expected_output": "ALLOWED\nALLOWED\nALLOWED"
+      },
+      {
+        "input": "3\n5\n0 user1\n10 user1\n20 user1\n30 user1\n180 user1",
+        "expected_output": "ALLOWED\nALLOWED\nALLOWED\nRATE_LIMITED\nALLOWED"
+      },
+      {
+        "input": "2\n4\n0 alice\n5 alice\n10 bob\n15 alice",
+        "expected_output": "ALLOWED\nALLOWED\nALLOWED\nRATE_LIMITED"
+      },
+      {
+        "input": "1\n3\n100 a\n100 b\n100 c",
+        "expected_output": "ALLOWED\nALLOWED\nALLOWED"
+      }
+    ]
+  },
+
+  "SQL": {
+    "title": "Sales Report Generator",
+    "difficulty": "Easy",
+    "problem_statement": "As a backend developer, you often query databases to generate business reports. Simulate a SQL GROUP BY + SUM + ORDER BY operation in Python:\n\nGiven a list of sales transactions where each record has a product name and a sale amount, compute the total revenue per product and produce a sorted report.\n\nThis is equivalent to:\n```sql\nSELECT product, SUM(amount) AS total\nFROM sales\nGROUP BY product\nORDER BY product ASC;\n```\n\nProduct names are single words (no spaces). Amounts are positive integers.",
+    "input_format": "Line 1: N (number of sales transactions)\nNext N lines: 'product_name amount' separated by a single space",
+    "output_format": "For each product, print: 'product_name: total'\nSorted alphabetically (A-Z) by product name.",
+    "constraints": "1 \u2264 N \u2264 10000\n1 \u2264 amount \u2264 100000\nProduct names are alphanumeric, single word, case-sensitive",
+    "examples": [
+      {
+        "input": "5\nApple 100\nBanana 50\nApple 200\nBanana 30\nCherry 150",
+        "output": "Apple: 300\nBanana: 80\nCherry: 150",
+        "explanation": "Apple appears twice: 100+200=300. Banana: 50+30=80. Cherry: 150. Output is sorted alphabetically."
+      }
+    ],
+    "skill_tested": "SQL GROUP BY Logic, Dictionary Aggregation, Sorting",
+    "starter_code": "import sys\nfrom collections import defaultdict\n\ndata = sys.stdin.read().strip().split('\\n')\nn = int(data[0])\n\n# TODO: Aggregate sales by product name\nsales = defaultdict(int)\nfor i in range(1, n + 1):\n    parts = data[i].rsplit(' ', 1)  # Split from right to handle multi-word product names\n    product = parts[0]\n    amount = int(parts[1])\n    # TODO: Add amount to the product's total\n    sales[product] += amount\n\n# TODO: Print results in format 'product: total', sorted alphabetically\nfor product in sorted(sales.keys()):\n    print(f'{product}: {sales[product]}')\n",
+    "test_cases": [
+      {
+        "input": "5\nApple 100\nBanana 50\nApple 200\nBanana 30\nCherry 150",
+        "expected_output": "Apple: 300\nBanana: 80\nCherry: 150"
+      },
+      {
+        "input": "3\nPython 500\nJava 300\nPython 200",
+        "expected_output": "Java: 300\nPython: 700"
+      },
+      {
+        "input": "1\nLaptop 1000",
+        "expected_output": "Laptop: 1000"
+      },
+      {
+        "input": "6\nReact 200\nNode 150\nReact 100\nVue 300\nNode 50\nVue 200",
+        "expected_output": "Node: 200\nReact: 300\nVue: 500"
+      }
+    ]
+  },
+
+  "Docker": {
+    "title": "Application Log Filter",
+    "difficulty": "Easy",
+    "problem_statement": "In DevOps and backend development, application logs follow standard severity levels. You are building a log aggregation tool that filters log entries based on a minimum severity level.\n\nLog levels in order of increasing severity:\nDEBUG < INFO < WARNING < ERROR < CRITICAL\n\nGiven a minimum log level, output only the log entries at or above that severity. This simulates how tools like Docker logging drivers and log management systems filter noise from production logs.\n\nMaintain the original order of the log entries.",
+    "input_format": "Line 1: minimum_level (one of: DEBUG, INFO, WARNING, ERROR, CRITICAL)\nLine 2: N (number of log entries)\nNext N lines: 'LEVEL message' (space-separated; message can contain spaces)",
+    "output_format": "Print each log entry (preserving original format 'LEVEL message') where LEVEL >= minimum_level.\nIf no entries match, print nothing.",
+    "constraints": "1 \u2264 N \u2264 10000\nLevels are always one of: DEBUG, INFO, WARNING, ERROR, CRITICAL (uppercase)\nMessage can contain spaces",
+    "examples": [
+      {
+        "input": "WARNING\n5\nDEBUG System starting up\nINFO Server started on port 8080\nWARNING High memory usage: 85%\nERROR Database connection timeout\nCRITICAL Service unresponsive",
+        "output": "WARNING High memory usage: 85%\nERROR Database connection timeout\nCRITICAL Service unresponsive",
+        "explanation": "Only WARNING, ERROR, and CRITICAL levels are at or above the WARNING threshold."
+      }
+    ],
+    "skill_tested": "Log Level Filtering, DevOps Concepts, String Processing",
+    "starter_code": "import sys\n\n# Log levels in order of severity (index = severity rank)\nLEVELS = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']\n\ndef get_severity(level):\n    \"\"\"Return the severity rank (0=DEBUG, 4=CRITICAL)\"\"\"\n    # TODO: Return the index of 'level' in LEVELS list\n    return LEVELS.index(level) if level in LEVELS else -1\n\ndef should_show(level, min_level):\n    \"\"\"Return True if level severity >= min_level severity\"\"\"\n    # TODO: Compare severity ranks using get_severity()\n    return get_severity(level) >= get_severity(min_level)\n\ndata = sys.stdin.read().strip().split('\\n')\nmin_level = data[0].strip()\nn = int(data[1])\n\nfor i in range(2, 2 + n):\n    line = data[i]\n    parts = line.split(' ', 1)  # Split into [LEVEL, message]\n    level = parts[0]\n    message = parts[1] if len(parts) > 1 else ''\n    \n    if should_show(level, min_level):\n        print(f'{level} {message}')\n",
+    "test_cases": [
+      {
+        "input": "WARNING\n5\nDEBUG System starting up\nINFO Server started on port 8080\nWARNING High memory usage: 85%\nERROR Database connection timeout\nCRITICAL Service unresponsive",
+        "expected_output": "WARNING High memory usage: 85%\nERROR Database connection timeout\nCRITICAL Service unresponsive"
+      },
+      {
+        "input": "ERROR\n4\nINFO User logged in\nWARNING Slow query detected\nERROR Null pointer exception\nCRITICAL Out of memory",
+        "expected_output": "ERROR Null pointer exception\nCRITICAL Out of memory"
+      },
+      {
+        "input": "DEBUG\n3\nDEBUG Entering function foo\nINFO Processing request\nWARNING Cache miss",
+        "expected_output": "DEBUG Entering function foo\nINFO Processing request\nWARNING Cache miss"
+      },
+      {
+        "input": "CRITICAL\n4\nDEBUG Heartbeat\nINFO Checkpoint saved\nWARNING Disk usage 90%\nCRITICAL Disk full",
+        "expected_output": "CRITICAL Disk full"
+      }
+    ]
+  },
+
+  "Algorithms": {
+    "title": "Microservice Boot Sequence",
+    "difficulty": "Hard",
+    "problem_statement": "You are deploying a microservices application. Each service has a list of other services it depends on and cannot start until all its dependencies are running.\n\nGiven N microservices and their dependencies, find a valid boot sequence (order to start all services) such that every dependency is started before the service that requires it.\n\nIf multiple valid orderings exist, choose the one that is alphabetically smallest at each step (greedy alphabetical selection).\n\nIf a circular dependency exists (e.g., A depends on B, B depends on A), print 'CIRCULAR DEPENDENCY DETECTED'.\n\nThis problem models topological sorting — a fundamental concept in scheduling, build systems, and deployment pipelines.",
+    "input_format": "Line 1: N (number of services)\nNext N lines: 'service_name: dep1 dep2 ...' (colon separates name from space-delimited deps)\nIf a service has no dependencies, write 'service_name:' with nothing after the colon.",
+    "output_format": "Print each service name on a separate line in valid boot order.\nOr print 'CIRCULAR DEPENDENCY DETECTED' if no valid order exists.",
+    "constraints": "1 \u2264 N \u2264 100\nService names are lowercase alphanumeric\nNo service depends on itself",
+    "examples": [
+      {
+        "input": "4\ndatabase:\napi: database\nfrontend: api\nnginx: api frontend",
+        "output": "database\napi\nfrontend\nnginx",
+        "explanation": "database has no deps, starts first. api needs database. frontend needs api. nginx needs both api and frontend."
+      }
+    ],
+    "skill_tested": "Topological Sort, Graph BFS (Kahn's Algorithm), DSA",
+    "starter_code": "import sys\nfrom collections import defaultdict, deque\n\ndef find_boot_sequence(services, dependencies):\n    \"\"\"\n    Topological sort using Kahn's BFS algorithm.\n    Returns ordered list, or None if circular dependency.\n    \"\"\"\n    # Build graph: dep -> [services that need dep]\n    graph = defaultdict(list)\n    in_degree = {s: 0 for s in services}\n    \n    for service, deps in dependencies.items():\n        for dep in deps:\n            graph[dep].append(service)\n            in_degree[service] += 1\n    \n    # Start with services that have no dependencies\n    # Use sorted list for alphabetical ordering\n    available = sorted([s for s in services if in_degree[s] == 0])\n    result = []\n    \n    while available:\n        # TODO: Pick the alphabetically first available service\n        service = available.pop(0)\n        result.append(service)\n        \n        # TODO: For each service that depended on this one,\n        # decrease its in_degree. If it becomes 0, add to available (sorted).\n        for dependent in graph[service]:\n            in_degree[dependent] -= 1\n            if in_degree[dependent] == 0:\n                available.append(dependent)\n                available.sort()  # Keep sorted for alphabetical priority\n    \n    # If result doesn't include all services, there's a cycle\n    if len(result) == len(services):\n        return result\n    return None  # Circular dependency\n\ndata = sys.stdin.read().strip().split('\\n')\nn = int(data[0])\nservices = []\ndependencies = {}\n\nfor i in range(1, n + 1):\n    line = data[i]\n    colon_idx = line.index(':')\n    service = line[:colon_idx].strip()\n    deps_str = line[colon_idx + 1:].strip()\n    deps = deps_str.split() if deps_str else []\n    services.append(service)\n    dependencies[service] = deps\n\nresult = find_boot_sequence(services, dependencies)\nif result is None:\n    print('CIRCULAR DEPENDENCY DETECTED')\nelse:\n    for s in result:\n        print(s)\n",
+    "test_cases": [
+      {
+        "input": "4\ndatabase:\napi: database\nfrontend: api\nnginx: api frontend",
+        "expected_output": "database\napi\nfrontend\nnginx"
+      },
+      {
+        "input": "3\na: b\nb: c\nc: a",
+        "expected_output": "CIRCULAR DEPENDENCY DETECTED"
+      },
+      {
+        "input": "5\nauth:\ndb:\ncache:\napi: auth db cache\napp: api",
+        "expected_output": "auth\ncache\ndb\napi\napp"
+      },
+      {
+        "input": "6\npostgres:\nredis:\ncelery: redis\ndjango: postgres redis\nnginx: django\nflower: celery",
+        "expected_output": "postgres\nredis\ncelery\ndjango\nflower\nnginx"
+      }
+    ]
+  },
+
+  "default": {
+    "title": "Sales Report Generator",
+    "difficulty": "Easy",
+    "problem_statement": "As a backend developer, you often query databases to generate business reports. Simulate a SQL GROUP BY + SUM + ORDER BY operation in Python:\n\nGiven a list of sales transactions where each record has a product name and a sale amount, compute the total revenue per product and produce a sorted report.\n\nThis is equivalent to:\n```sql\nSELECT product, SUM(amount) AS total\nFROM sales\nGROUP BY product\nORDER BY product ASC;\n```\n\nProduct names are single words (no spaces). Amounts are positive integers.",
+    "input_format": "Line 1: N (number of sales transactions)\nNext N lines: 'product_name amount' separated by a single space",
+    "output_format": "For each product, print: 'product_name: total'\nSorted alphabetically (A-Z) by product name.",
+    "constraints": "1 \u2264 N \u2264 10000\n1 \u2264 amount \u2264 100000\nProduct names are alphanumeric, single word, case-sensitive",
+    "examples": [
+      {
+        "input": "5\nApple 100\nBanana 50\nApple 200\nBanana 30\nCherry 150",
+        "output": "Apple: 300\nBanana: 80\nCherry: 150",
+        "explanation": "Apple appears twice: 100+200=300. Banana: 50+30=80. Cherry: 150. Output is sorted alphabetically."
+      }
+    ],
+    "skill_tested": "SQL GROUP BY Logic, Dictionary Aggregation, Sorting",
+    "starter_code": "import sys\nfrom collections import defaultdict\n\ndata = sys.stdin.read().strip().split('\\n')\nn = int(data[0])\n\nsales = defaultdict(int)\nfor i in range(1, n + 1):\n    parts = data[i].rsplit(' ', 1)\n    product = parts[0]\n    amount = int(parts[1])\n    sales[product] += amount\n\nfor product in sorted(sales.keys()):\n    print(f'{product}: {sales[product]}')\n",
+    "test_cases": [
+      {
+        "input": "5\nApple 100\nBanana 50\nApple 200\nBanana 30\nCherry 150",
+        "expected_output": "Apple: 300\nBanana: 80\nCherry: 150"
+      },
+      {
+        "input": "3\nPython 500\nJava 300\nPython 200",
+        "expected_output": "Java: 300\nPython: 700"
+      },
+      {
+        "input": "1\nLaptop 1000",
+        "expected_output": "Laptop: 1000"
+      },
+      {
+        "input": "6\nReact 200\nNode 150\nReact 100\nVue 300\nNode 50\nVue 200",
+        "expected_output": "Node: 200\nReact: 300\nVue: 500"
+      }
+    ]
+  }
+}

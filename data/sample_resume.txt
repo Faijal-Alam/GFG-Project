@@ -1,0 +1,74 @@
+PRIYA SHARMA
+Email: priya.sharma@email.com | Phone: +91-9876543210
+LinkedIn: linkedin.com/in/priyasharma | GitHub: github.com/priyasharma
+B.Tech Computer Science & Engineering | IIT Delhi | 2024
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TECHNICAL SKILLS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Programming Languages:
+  Python (3+ years), C, C++ (competitive programming)
+
+Databases:
+  MySQL, Basic SQL (SELECT, JOINs, aggregate functions, subqueries)
+
+Data Structures & Algorithms:
+  Arrays, Linked Lists, Binary Trees, Stacks, Queues, Graphs
+  Sorting (QuickSort, MergeSort), Searching (Binary Search)
+  Basic Dynamic Programming concepts
+
+Version Control:
+  Git, GitHub (branching, pull requests, merge conflicts)
+
+Development Tools:
+  VS Code, Jupyter Notebook, PyCharm
+
+Core CS Concepts:
+  Object-Oriented Programming (OOP)
+  Basic OS concepts (processes, threads)
+  Computer Networks fundamentals
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROJECTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Student Grade Management System (Python, MySQL)
+   - CLI-based application for managing student records
+   - Implemented CRUD operations using MySQL
+   - Used Python's mysql-connector library for DB integration
+   - Applied OOP principles for clean code architecture
+
+2. Custom Data Structures Library (Python)
+   - Implemented LinkedList, Stack, Queue, BinarySearchTree from scratch
+   - Wrote unit tests for each data structure
+   - Published as a pip-installable package on PyPI
+
+3. Competitive Programming Solutions Repository
+   - Solved 200+ problems on LeetCode and Codeforces
+   - Topics: DP, Graphs, Trees, Greedy, Backtracking
+   - GitHub repository with organized solutions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EDUCATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+B.Tech in Computer Science & Engineering
+Indian Institute of Technology, Delhi
+CGPA: 8.2 / 10.0 (2020 – 2024)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CERTIFICATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Python for Everybody (Coursera – University of Michigan)
+- Introduction to Databases (edX – Stanford Online)
+- Data Structures & Algorithms in Python (Udemy)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ACHIEVEMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Top 500 rank in Google Kickstart 2023
+- Solved 200+ LeetCode problems (100+ Medium difficulty)
+- Department Merit Scholarship recipient (2021, 2022)
